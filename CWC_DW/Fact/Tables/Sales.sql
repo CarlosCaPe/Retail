@@ -53,6 +53,8 @@
 );
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_SalesOrder_Attribute_Amounts]
     ON [Fact].[Sales]([Sales_Order_Attribute_Key] ASC)
@@ -86,4 +88,10 @@ CREATE NONCLUSTERED INDEX [IX_Return_Invent_Trans_ID]
 GO
 CREATE NONCLUSTERED INDEX [IX_Invent_Trans_ID]
     ON [Fact].[Sales]([Invent_Trans_ID] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_Sales_Line_Order_Quantity]
+    ON [Fact].[Sales]([Sales_Line_Ordered_Sales_Quantity] ASC)
+    INCLUDE([Sales_Line_Property_Key], [Sales_Line_Product_Key], [Sales_Header_Created_Date]);
 

@@ -1,4 +1,5 @@
 ﻿
+
 /****** Script for SelectTopNRows command from SSMS  ******/
 CREATE VIEW [Analytics].[v_Fact_Inventory_Snapshots]
 
@@ -33,7 +34,13 @@ SELECT --[Snapshot Date Key] = [Snapshot_Date_Key]
 	  --,[Inventory Warehouse ID] = iw.Inventory_Warehouse_ID
 	  --,[Warehouse Status] = CASE WHEN ISNULL(iw.is_Active,1) = 1 THEN 'Active' ELSE 'Inactive' END
 	  --,iw.Inventory_Warehouse_ID
-      ,[On Hand Quantity (Available)] = SUM(CAST([Available_On_Hand_Quantity] AS INT))
+      ,[On Hand Quantity (Available)] =   SUM(CAST(ISNULL([Available_On_Hand_Quantity],0) AS INT))
+										+ SUM(CAST(ISNULL(Returns_On_Hand_Quantity,0) AS INT))
+										+ SUM(CAST(ISNULL(Warehouse_Damage_On_Hand_Quantity,0) AS INT))
+										+ SUM(CAST(ISNULL(Temporary_On_Hand_Quantity,0) AS INT))
+										+ SUM(CAST(ISNULL(Blocking_On_Hand_Quantity,0) AS INT))
+										+ SUM(CAST(ISNULL(Damaged_But_Available_On_Hand_Quantity,0) AS INT))
+										+ SUM(CAST(ISNULL(General_Quarantine_On_Hand_Quantity,0) AS INT))
       --,[Reserved On Hand Quantity (Available)] = SUM(CAST([Available_Reserved_On_Hand_Quantity] AS INT))
       ,[Available On Hand Quantity (Available)] = SUM(CAST([Available_Available_On_Hand_Quantity] AS INT))
 	  ,[Ordered Units] = SUM(u.[Ordered Units])
@@ -160,5 +167,11 @@ SELECT --[Snapshot Date Key] = [Snapshot_Date_Key]
 --)
 GROUP BY
 	d.Calendar_Date,p.Product_Key,CASE iw.Inventory_Warehouse WHEN 'Distribution Center' THEN 'GEODIS' ELSE iw.Inventory_Warehouse END
-HAVING SUM(CAST([Available_On_Hand_Quantity] AS INT)) > 0
+/*HAVING SUM(CAST(ISNULL([Available_On_Hand_Quantity],0) AS INT))
+										+ SUM(CAST(ISNULL(Returns_On_Hand_Quantity,0) AS INT))
+										+ SUM(CAST(ISNULL(Warehouse_Damage_On_Hand_Quantity,0) AS INT))
+										+ SUM(CAST(ISNULL(Temporary_On_Hand_Quantity,0) AS INT))
+										+ SUM(CAST(ISNULL(Blocking_On_Hand_Quantity,0) AS INT))
+										+ SUM(CAST(ISNULL(Damaged_But_Available_On_Hand_Quantity,0) AS INT))
+										+ SUM(CAST(ISNULL(General_Quarantine_On_Hand_Quantity,0) AS INT)) > 0*/
 ;
