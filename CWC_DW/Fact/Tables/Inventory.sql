@@ -102,3 +102,11 @@
     CONSTRAINT [PK_Inventory] PRIMARY KEY CLUSTERED ([Snapshot_Date_Key] ASC, [Product_Key] ASC, [Inventory_Warehouse_Key] ASC)
 );
 
+
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Inventory_1130_1129]
+    ON [Fact].[Inventory]([ETL_Created_Date] ASC)
+    INCLUDE([Available_On_Hand_Quantity]);
+

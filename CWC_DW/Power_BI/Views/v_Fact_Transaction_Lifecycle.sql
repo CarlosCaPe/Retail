@@ -1,4 +1,5 @@
 ﻿
+
 CREATE VIEW [Power_BI].[v_Fact_Transaction_Lifecycle] AS
 
 WITH Sales_Baked_Free_Shipping AS
@@ -7,13 +8,14 @@ WITH Sales_Baked_Free_Shipping AS
 	  ,[is_Backorder_Fill] = MAX(CAST([is_Backorder_Fill] AS TINYINT))
       ,[is_Baked] = MAX(CAST([is_Baked] AS TINYINT))
       ,[is_Free_Shipping] = MAX(CAST([is_Free_Shipping] AS INT))
+	  ,[Invoice_Date] = MIN(Invoice_Line_Date) /*Added Invoice Date to use as Transaction Lifecycle Date for Returns Summary*/
 		FROM [CWC_DW].[Fact].[Sales] (NOLOCK) s 
 			INNER JOIN [CWC_DW].[Fact].[Invoices] i ON s.Invent_Trans_ID = i.Invent_Trans_ID
 			INNER JOIN [CWC_DW].[Dimension].[Invoice_Attributes] ia ON i.[Invoice_Attribute_Key] = ia.[Invoice_Attribute_Key]
 			--LEFT JOIN Free_Shipping fs ON i.Invoice_Number = fs.Invoice_Number
 		WHERE i.[Invoice_Number] NOT IN ('000002','000001') AND CAST(i.Invoice_Line_Date AS DATE) >= '12/1/2020'
 		GROUP BY s.Sales_Key
-	) --SELECT * FROM  Sales_Baked
+	) --SELECT * FROM  Sales_Baked_Free_Shipping
 ,B2B AS 
 	(
 		SELECT Customer_Key
@@ -78,7 +80,7 @@ WITH Sales_Baked_Free_Shipping AS
 	(
 		SELECT --TOP 5000 
 			 --[Transaction Lifecycle Key] = s.Sales_Key
-			 [Transaction Lifecycle Date] = CAST(s.Sales_Header_Created_Date AT TIME ZONE 'UTC' AT TIME ZONE 'Eastern Standard Time' AS DATE) --CAST(s.Sales_Header_Created_Date AS DATE) --CAST(s.Sales_Line_Created_Date_EST AS DATE)
+			 [Transaction Lifecycle Date] = sb.Invoice_Date--CAST(s.Sales_Header_Created_Date AT TIME ZONE 'UTC' AT TIME ZONE 'Eastern Standard Time' AS DATE) --CAST(s.Sales_Header_Created_Date AS DATE) --CAST(s.Sales_Line_Created_Date_EST AS DATE)
 			,[Transaction Lifecycle Order Number] = s.Sales_Order_Number
 			,[Transaction Date] = CAST(s.Sales_Header_Created_Date AT TIME ZONE 'UTC' AT TIME ZONE 'Eastern Standard Time' AS DATE)--CAST(s.Sales_Line_Created_Date_EST AS DATE)
 			,[Product Key] = s.Sales_Line_Product_Key

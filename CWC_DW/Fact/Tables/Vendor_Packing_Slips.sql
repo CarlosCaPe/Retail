@@ -25,8 +25,34 @@
 );
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_Purchase_Order_Key]
     ON [Fact].[Vendor_Packing_Slips]([Purchase_Order_Key] ASC)
     INCLUDE([Vendor_Packing_Slip_Quantity]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Vendor_Packing_Slips_213_212]
+    ON [Fact].[Vendor_Packing_Slips]([Vendor_Packing_Slip_Quantity] ASC, [Vendor_Packing_Accounting_Date] ASC)
+    INCLUDE([Purchase_Order_Number], [Purchase_Order_Line_Number], [Purchase_Order_Key], [Product_Key]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Vendor_Packing_Slips_191_190]
+    ON [Fact].[Vendor_Packing_Slips]([Vendor_Packing_Slip_Quantity] ASC, [Vendor_Packing_Accounting_Date] ASC)
+    INCLUDE([Invent_Trans_ID], [Purchase_Order_Number], [Purchase_Order_Line_Number], [Purchase_Order_Key], [Product_Key]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Vendor_Packing_Slips_187_186]
+    ON [Fact].[Vendor_Packing_Slips]([Vendor_Packing_Accounting_Date] ASC)
+    INCLUDE([Purchase_Order_Key], [Product_Key], [Vendor_Packing_Slip_Quantity]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Vendor_Packing_Slips_145_144]
+    ON [Fact].[Vendor_Packing_Slips]([Vendor_Packing_Accounting_Date] ASC)
+    INCLUDE([Vendor_Packing_Slip_Quantity], [is_Backordered_Product]);
 

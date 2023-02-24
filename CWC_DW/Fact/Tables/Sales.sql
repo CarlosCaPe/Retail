@@ -55,6 +55,8 @@
 
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_SalesOrder_Attribute_Amounts]
     ON [Fact].[Sales]([Sales_Order_Attribute_Key] ASC)
@@ -94,4 +96,22 @@ GO
 CREATE NONCLUSTERED INDEX [IX_Sales_Line_Order_Quantity]
     ON [Fact].[Sales]([Sales_Line_Ordered_Sales_Quantity] ASC)
     INCLUDE([Sales_Line_Property_Key], [Sales_Line_Product_Key], [Sales_Header_Created_Date]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Sales_1477_1476]
+    ON [Fact].[Sales]([Sales_Line_Number] ASC)
+    INCLUDE([Sales_Order_Number], [Invoice_Key]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Sales_1465_1464]
+    ON [Fact].[Sales]([Sales_Line_Ordered_Sales_Quantity] ASC)
+    INCLUDE([Sales_Order_Number], [Invent_Trans_ID], [Sales_Header_Location_Key], [Sales_Line_Property_Key], [Sales_Line_Product_Key], [Sales_Line_Cost_Price], [Sales_Header_Created_Date], [Sales_Line_Price], [Sales_Line_Created_Date_EST]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Sales_1463_1462]
+    ON [Fact].[Sales]([Sales_Line_Property_Key] ASC, [Sales_Line_Ordered_Sales_Quantity] ASC)
+    INCLUDE([Sales_Order_Number], [Invent_Trans_ID], [Sales_Header_Location_Key], [Sales_Line_Product_Key], [Sales_Line_Cost_Price], [Sales_Header_Created_Date], [Sales_Line_Price], [Sales_Line_Created_Date_EST]);
 

@@ -48,3 +48,83 @@
     CONSTRAINT [UK_Purchase_Orders] UNIQUE NONCLUSTERED ([Purchase_Order_Number] ASC, [Purchase_Order_Line_Number] ASC)
 );
 
+
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Orders_217_216]
+    ON [Fact].[Purchase_Orders]([Purchase_Order_Header_Accounting_Date] ASC, [Open_Quantity] ASC)
+    INCLUDE([Purchase_Order_Number], [Purchase_Order_Line_Number], [Vendor_Key], [Purchase_Order_Property_Key], [Product_Key], [Purchase_Line_Confirmed_Delivery_Date], [Purchase_Line_Open_Amount], [Purchase_Line_Purchase_Price], [Purchase_Line_Ordered_Quantity], [Received_Quantity], [Commission_Charge_Percentage], [Tariff_Charge_Percentage], [Duty_Charge_Percentage], [Freight_Charge_Percentage], [Freight_In_Charge_Percentage]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Orders_215_214]
+    ON [Fact].[Purchase_Orders]([Purchase_Order_Property_Key] ASC, [Purchase_Order_Header_Accounting_Date] ASC, [Open_Quantity] ASC)
+    INCLUDE([Purchase_Order_Number], [Purchase_Order_Line_Number], [Vendor_Key], [Product_Key], [Purchase_Line_Confirmed_Delivery_Date], [Purchase_Line_Open_Amount], [Purchase_Line_Purchase_Price], [Purchase_Line_Ordered_Quantity], [Received_Quantity], [Commission_Charge_Percentage], [Tariff_Charge_Percentage], [Duty_Charge_Percentage], [Freight_Charge_Percentage], [Freight_In_Charge_Percentage]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Orders_203_202]
+    ON [Fact].[Purchase_Orders]([is_Removed_From_Source] ASC, [Purchase_Order_Header_Accounting_Date] ASC)
+    INCLUDE([Purchase_Order_Property_Key], [Product_Key], [Purchase_Order_Fill_Key], [Purchase_Line_Confirmed_Delivery_Date], [Purchase_Line_Ordered_Quantity], [Received_Quantity], [Open_Quantity]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Orders_201_200]
+    ON [Fact].[Purchase_Orders]([Purchase_Order_Property_Key] ASC, [is_Removed_From_Source] ASC, [Purchase_Order_Header_Accounting_Date] ASC)
+    INCLUDE([Product_Key], [Purchase_Order_Fill_Key], [Purchase_Line_Confirmed_Delivery_Date], [Purchase_Line_Ordered_Quantity], [Received_Quantity], [Open_Quantity]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Orders_199_198]
+    ON [Fact].[Purchase_Orders]([is_Removed_From_Source] ASC, [Purchase_Order_Header_Accounting_Date] ASC)
+    INCLUDE([Purchase_Order_Number], [Purchase_Order_Line_Number], [Purchase_Order_Property_Key], [Product_Key], [Purchase_Order_Fill_Key], [Purchase_Line_Confirmed_Delivery_Date], [Purchase_Line_Ordered_Quantity], [Received_Quantity], [Open_Quantity]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Orders_197_196]
+    ON [Fact].[Purchase_Orders]([Purchase_Order_Fill_Key] ASC, [is_Removed_From_Source] ASC, [Purchase_Order_Header_Accounting_Date] ASC)
+    INCLUDE([Purchase_Order_Number], [Purchase_Order_Line_Number], [Purchase_Order_Property_Key], [Product_Key], [Purchase_Line_Confirmed_Delivery_Date], [Purchase_Line_Ordered_Quantity], [Received_Quantity], [Open_Quantity]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Orders_195_194]
+    ON [Fact].[Purchase_Orders]([is_Removed_From_Source] ASC, [Purchase_Order_Header_Accounting_Date] ASC, [Open_Quantity] ASC)
+    INCLUDE([Purchase_Order_Number], [Purchase_Order_Line_Number], [Invent_Trans_ID], [Vendor_Key], [Purchase_Order_Property_Key], [Product_Key], [Purchase_Line_Confirmed_Delivery_Date], [Purchase_Line_Purchase_Price], [Commission_Charge_Percentage], [Tariff_Charge_Percentage], [Duty_Charge_Percentage], [Freight_Charge_Percentage], [Freight_In_Charge_Percentage]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Orders_193_192]
+    ON [Fact].[Purchase_Orders]([is_Removed_From_Source] ASC, [Purchase_Order_Header_Accounting_Date] ASC)
+    INCLUDE([Purchase_Order_Number], [Vendor_Key], [Purchase_Order_Property_Key], [Product_Key], [Purchase_Line_Confirmed_Delivery_Date], [Purchase_Line_Purchase_Price], [Commission_Charge_Percentage], [Tariff_Charge_Percentage], [Duty_Charge_Percentage], [Freight_Charge_Percentage], [Freight_In_Charge_Percentage]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Orders_143_142]
+    ON [Fact].[Purchase_Orders]([is_Removed_From_Source] ASC, [Purchase_Order_Header_Accounting_Date] ASC, [Purchase_Line_Confirmed_Delivery_Date] ASC)
+    INCLUDE([Purchase_Order_Property_Key], [Product_Key], [Purchase_Order_Fill_Key], [Purchase_Line_Ordered_Quantity], [Received_Quantity], [Open_Quantity]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Orders_141_140]
+    ON [Fact].[Purchase_Orders]([Purchase_Order_Property_Key] ASC, [is_Removed_From_Source] ASC, [Purchase_Order_Header_Accounting_Date] ASC, [Purchase_Line_Confirmed_Delivery_Date] ASC)
+    INCLUDE([Product_Key], [Purchase_Order_Fill_Key], [Purchase_Line_Ordered_Quantity], [Received_Quantity], [Open_Quantity]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Orders_133_132]
+    ON [Fact].[Purchase_Orders]([Product_Key] ASC)
+    INCLUDE([Purchase_Line_Purchase_Price], [Purchase_Line_Ordered_Quantity], [Commission_Charge_Percentage], [Tariff_Charge_Percentage], [Duty_Charge_Percentage], [Freight_Charge_Percentage], [Freight_In_Charge_Percentage]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Orders_125_124]
+    ON [Fact].[Purchase_Orders]([is_Removed_From_Source] ASC, [Purchase_Order_Header_Accounting_Date] ASC, [Purchase_Line_Confirmed_Delivery_Date] ASC)
+    INCLUDE([Purchase_Order_Number], [Purchase_Order_Property_Key], [Product_Key], [Purchase_Order_Fill_Key]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Orders_123_122]
+    ON [Fact].[Purchase_Orders]([Purchase_Order_Fill_Key] ASC, [is_Removed_From_Source] ASC, [Purchase_Order_Header_Accounting_Date] ASC, [Purchase_Line_Confirmed_Delivery_Date] ASC)
+    INCLUDE([Purchase_Order_Number], [Purchase_Order_Property_Key], [Product_Key]);
+

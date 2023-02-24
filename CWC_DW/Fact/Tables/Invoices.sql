@@ -33,6 +33,8 @@
 );
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_Sales_Key]
     ON [Fact].[Invoices]([Sales_Key] ASC)
@@ -66,4 +68,10 @@ GO
 CREATE NONCLUSTERED INDEX [IX_Invoice_Number_Invoice_Line_Date]
     ON [Fact].[Invoices]([Invoice_Number] ASC, [Invoice_Line_Date] ASC)
     INCLUDE([Invoice_Line_Number], [Invent_Trans_ID], [Invoice_Line_Product_Key], [Invoice_Customer_Key], [Invoice_Property_Key], [Invoice_Line_Quantity], [Invoice_Line_Amount], [Invoice_Line_Discount_Amount], [Invoice_Attribute_Key], [Invoice_Header_Total_Charge_Amount]);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Invoices_1541_1540]
+    ON [Fact].[Invoices]([Invoice_Attribute_Key] ASC, [Invoice_Line_Date] ASC)
+    INCLUDE([Invoice_Number], [Invent_Trans_ID]);
 

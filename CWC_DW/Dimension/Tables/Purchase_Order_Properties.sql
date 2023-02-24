@@ -20,3 +20,11 @@
     CONSTRAINT [UK_Purchase_Order_Properties] UNIQUE NONCLUSTERED ([Purchase_Order_Header_Status] ASC, [Purchase_Order_Line_Status] ASC, [Purchase_Order_Header_Delivery_Mode_ID] ASC, [Purchase_Order_Header_Delivery_Terms_ID] ASC, [Purchase_Order_Header_Document_Approval_Status] ASC, [Purchase_Order_Header_Buyer_Group_ID] ASC, [Purchase_Order_Header_Payment_Terms_Name] ASC, [Purchase_Order_Header_Vendor_Payment_Method_Name] ASC, [Purchase_Order_Header_Season_CD] ASC)
 );
 
+
+
+
+GO
+CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Order_Properties_121_120]
+    ON [Dimension].[Purchase_Order_Properties]([Purchase_Order_Header_Season_CD] ASC)
+    INCLUDE([Purchase_Order_Header_Season]);
+
