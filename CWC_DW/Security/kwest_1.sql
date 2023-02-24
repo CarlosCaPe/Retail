@@ -1,0 +1,3 @@
+﻿CREATE LOGIN [kwest]
+    WITH PASSWORD = N'bnwm8ekwybdefz2pfz{jKEi|msFT7_&#$!~<{Wwbksun~dhX', SID = 0xBE42F826AEE20547890A232828057034, DEFAULT_LANGUAGE = [us_english], CHECK_POLICY = OFF;
+

@@ -1,0 +1,367 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>CWC_DW</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{319dcf66-e0f8-4147-8f16-e7f9ab80a7bb}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>CWC_DW</RootNamespace>
+    <AssemblyName>CWC_DW</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="Dimension\" />
+    <Folder Include="Dimension\Tables\" />
+    <Folder Include="Reference\" />
+    <Folder Include="Reference\Tables\" />
+    <Folder Include="Marketing\" />
+    <Folder Include="Marketing\Tables\" />
+    <Folder Include="Fact\" />
+    <Folder Include="Fact\Tables\" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="Import\" />
+    <Folder Include="Import\Tables\" />
+    <Folder Include="Staging\" />
+    <Folder Include="Staging\Tables\" />
+    <Folder Include="Power_BI\" />
+    <Folder Include="Power_BI\Views\" />
+    <Folder Include="Analytics\" />
+    <Folder Include="Analytics\Views\" />
+    <Folder Include="Data_Flow\" />
+    <Folder Include="Data_Flow\Views\" />
+    <Folder Include="Adhoc\" />
+    <Folder Include="Adhoc\Views\" />
+    <Folder Include="Reference\Views\" />
+    <Folder Include="Security\" />
+    <Folder Include="Import\Stored Procedures\" />
+    <Folder Include="Validation\" />
+    <Folder Include="Validation\Stored Procedures\" />
+    <Folder Include="Analytics\Stored Procedures\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="Dimension\Tables\Shipping_Advice_Cancels.sql" />
+    <Build Include="Reference\Tables\Payment_Terms.sql" />
+    <Build Include="Marketing\Tables\Ship_Confirmation_Carriers.sql" />
+    <Build Include="Fact\Tables\Warehouse_Shipping_Advice.sql" />
+    <Build Include="Dimension\Tables\Sales_Order_Attributes.sql" />
+    <Build Include="dbo\Tables\Fall21.sql" />
+    <Build Include="Fact\Tables\Demand_Summary.sql" />
+    <Build Include="Import\Tables\Summer22.sql" />
+    <Build Include="Import\Tables\ProductCatalog.sql" />
+    <Build Include="Fact\Tables\Backorder_Summary.sql" />
+    <Build Include="Fact\Tables\Backorders.sql" />
+    <Build Include="Marketing\Tables\Ship_Confirmations.sql" />
+    <Build Include="Fact\Tables\Backorder_Fiscal_Week_Summary.sql" />
+    <Build Include="Dimension\Tables\Locations.sql" />
+    <Build Include="Reference\Tables\Purchace_Order_Seasons.sql" />
+    <Build Include="Reference\Tables\Inventory_Statuses.sql" />
+    <Build Include="Dimension\Tables\Catalogs.sql" />
+    <Build Include="Fact\Tables\Trade_Agreement_Prices.sql" />
+    <Build Include="Fact\Tables\Catalog_Products.sql" />
+    <Build Include="Fact\Tables\Purchase_Orders.sql" />
+    <Build Include="Dimension\Tables\Products.sql" />
+    <Build Include="Dimension\Tables\Sales_Line_Properties.sql" />
+    <Build Include="Reference\Tables\Countries.sql" />
+    <Build Include="Fact\Tables\Trade_Agreement_Costs.sql" />
+    <Build Include="Reference\Tables\Inventory_Warehouses.sql" />
+    <Build Include="Staging\Tables\Source code setup.sql" />
+    <Build Include="Dimension\Tables\Vendors.sql" />
+    <Build Include="Dimension\Tables\Inventory_Warehouses.sql" />
+    <Build Include="Import\Tables\Discontinued.sql" />
+    <Build Include="dbo\Tables\tmpdt.sql" />
+    <Build Include="Dimension\Tables\Purchase_Order_Properties.sql" />
+    <Build Include="Fact\Tables\Inventory.sql" />
+    <Build Include="Reference\Tables\Inventory_Exclusions.sql" />
+    <Build Include="Fact\Tables\Invoices.sql" />
+    <Build Include="Fact\Tables\Vendor_Packing_Slips.sql" />
+    <Build Include="Dimension\Tables\Inventory_Journal_Properties.sql" />
+    <Build Include="Dimension\Tables\Employees.sql" />
+    <Build Include="Dimension\Tables\Invoice_Attributes.sql" />
+    <Build Include="Dimension\Tables\Credit_Card_Authorizations.sql" />
+    <Build Include="Dimension\Tables\Catalog_Promotions.sql" />
+    <Build Include="Dimension\Tables\Sales_Header_Properties.sql" />
+    <Build Include="Dimension\Tables\Inventory_Journal_Types.sql" />
+    <Build Include="Dimension\Tables\Purchase_Order_Fill.sql" />
+    <Build Include="Dimension\Tables\Sales_Margin.sql" />
+    <Build Include="Import\Tables\FISCAL_CALENDAR_OFFSETS.sql" />
+    <Build Include="Dimension\Tables\Dates.sql" />
+    <Build Include="Fact\Tables\Sales_Remapping.sql" />
+    <Build Include="Dimension\Tables\Invoice_Properties.sql" />
+    <Build Include="Fact\Tables\Backorders_Remapping.sql" />
+    <Build Include="Fact\Tables\Sales.sql" />
+    <Build Include="Fact\Tables\Inventory_Journals.sql" />
+    <Build Include="Fact\Tables\Credit_Card_Declines.sql" />
+    <Build Include="Import\Tables\REF_DAILY_PLAN_PROD.sql" />
+    <Build Include="Dimension\Tables\Customers.sql" />
+    <Build Include="Fact\Tables\Backorder_Relief_Summary.sql" />
+    <Build Include="Import\Tables\GA_ACQUISITION_301.sql" />
+    <Build Include="Fact\Tables\Forecast.sql" />
+    <Build Include="Fact\Tables\Warehouse_Shipping_Orders.sql" />
+    <Build Include="Dimension\Tables\Sales_Order_Fill.sql" />
+    <Build Include="Fact\Tables\Sessions.sql" />
+    <Build Include="Power_BI\Views\v_Sales_Order_Aging.sql" />
+    <Build Include="Power_BI\Views\v_Selling_Report_Invoices.sql" />
+    <Build Include="Analytics\Views\v_Fact_Sessions.sql" />
+    <Build Include="Power_BI\Views\v_Fact_Inventory_Snapshots.sql" />
+    <Build Include="Analytics\Views\v_Fact_Forecast.sql" />
+    <Build Include="Power_BI\Views\v_Nic_and_Zoe_ADHOC_DW_071522.sql" />
+    <Build Include="Analytics\Views\v_Fact_Transaction_Lifecycle_BACKUP_110222.sql" />
+    <Build Include="Power_BI\Views\v_Dim_Products.sql" />
+    <Build Include="Analytics\Views\v_Fact_Inventory_Snapshots.sql" />
+    <Build Include="Power_BI\Views\v_Fact_Inventory_Current.sql" />
+    <Build Include="Power_BI\Views\v_Dim_Purchase_Order_Properties.sql" />
+    <Build Include="Power_BI\Views\v_Selling_Report_Dates.sql" />
+    <Build Include="Power_BI\Views\v_Selling_Report_Inventory_Current.sql" />
+    <Build Include="Power_BI\Views\v_Fact_Sales_Sales_With_Cancels.sql" />
+    <Build Include="Power_BI\Views\v_Dim_Vendors.sql" />
+    <Build Include="Analytics\Views\v_Fact_Transaction_Lifecycle_BACKUP_02072023.sql" />
+    <Build Include="Analytics\Views\v_Dim_Employees_By_User_ID.sql" />
+    <Build Include="Power_BI\Views\v_Dim_Sales_Header_Properties.sql" />
+    <Build Include="Power_BI\Views\v_Selling_Report_Locations.sql" />
+    <Build Include="Power_BI\Views\v_Dim_Sales_Line_Properties.sql" />
+    <Build Include="Power_BI\Views\v_Fact_Inventory_Current_BACKUP_032122.sql" />
+    <Build Include="Data_Flow\Views\v_Dim_Sales_Line_Properties.sql" />
+    <Build Include="Power_BI\Views\v_Dim_Inventory_Warehouses.sql" />
+    <Build Include="Data_Flow\Views\v_Dim_Sales_Header_Properties.sql" />
+    <Build Include="Power_BI\Views\v_Dim_Employees_By_User_ID.sql" />
+    <Build Include="Power_BI\Views\v_Fact_Inventory_Snapshots_BACKUP_032422_EOM.sql" />
+    <Build Include="Power_BI\Views\v_Fact_Sales_Sales_With_Cancels_2.sql" />
+    <Build Include="Data_Flow\Views\v_Fact_Transactions.sql" />
+    <Build Include="Data_Flow\Views\v_Dim_Vendors.sql" />
+    <Build Include="Adhoc\Views\v_Finance_Invoice_Tracking_Numbers.sql" />
+    <Build Include="Data_Flow\Views\v_Fact_Purchase_Order_Open_Receipt_Units.sql" />
+    <Build Include="Adhoc\Views\v_Finance_Invoice_Tracking_Numbers_Part1.sql" />
+    <Build Include="Adhoc\Views\v_Finance_Invoice_Tracking_Numbers_Part2.sql" />
+    <Build Include="Data_Flow\Views\v_Fact_Purchase_Orders.sql" />
+    <Build Include="Reference\Views\v_Dim_Product_Snapshot_Mapping.sql" />
+    <Build Include="Analytics\Views\v_Fact_Sales_Sales.sql" />
+    <Build Include="Analytics\Views\v_Fact_Transaction_Lifecycle_2.sql" />
+    <Build Include="Analytics\Views\v_Fact_Sales_Returns.sql" />
+    <Build Include="Power_BI\Views\v_Nic_and_Zoe_ADHOC_DW_FORMATTED.sql" />
+    <Build Include="Analytics\Views\v_Dim_Sales_Order_Attributes.sql" />
+    <Build Include="Analytics\Views\v_Dim_Locations.sql" />
+    <Build Include="Power_BI\Views\v_Backorders_by_Style.sql" />
+    <Build Include="Power_BI\Views\v_Backorders_Sales.sql" />
+    <Build Include="Power_BI\Views\v_Nic_and_Zoe_ADHOC_Total_Order_Units.sql" />
+    <Build Include="Adhoc\Views\Return_Orders_FY2021.sql" />
+    <Build Include="Power_BI\Views\v_Fact_Backorder_Fiscal_Week_Summary.sql" />
+    <Build Include="Analytics\Views\v_Dim_Purchase_Order_Properties.sql" />
+    <Build Include="Power_BI\Views\v_Selling_Report_Invoices_BACKUP_041822.sql" />
+    <Build Include="Analytics\Views\v_Fact_Purchase_Orders.sql" />
+    <Build Include="Power_BI\Views\v_Dim_Products_Backordered.sql" />
+    <Build Include="Power_BI\Views\v_Product_Inventory_Top20_Diff.sql" />
+    <Build Include="Power_BI\Views\v_Backorders_Purchase_Orders.sql" />
+    <Build Include="Power_BI\Views\v_Purchase_Order_Line_Open_Receipt_Units.sql" />
+    <Build Include="Analytics\Views\v_Return_Orders_FY2021.sql" />
+    <Build Include="Power_BI\Views\v_Backorders_Purchase_Orders_BACKUP_080621.sql" />
+    <Build Include="Power_BI\Views\v_Dim_B2B.sql" />
+    <Build Include="Analytics\Views\v_Fact_Inventory_Current.sql" />
+    <Build Include="Power_BI\Views\v_Fact_Backorder_Relief_Summary.sql" />
+    <Build Include="Analytics\Views\v_Dim_Dates.sql" />
+    <Build Include="Analytics\Views\v_Dim_Inventory_Warehouses.sql" />
+    <Build Include="Power_BI\Views\v_Dim_Baked.sql" />
+    <Build Include="Analytics\Views\v_Dim_Products.sql" />
+    <Build Include="Analytics\Views\v_Fact_Inventory_Snapshot.sql" />
+    <Build Include="Power_BI\Views\v_Fact_Vendor_Packing_Slips.sql" />
+    <Build Include="Analytics\Views\v_Fact_Sales.sql" />
+    <Build Include="Analytics\Views\v_Dim_Customers.sql" />
+    <Build Include="Analytics\Views\v_Fact_Invoices.sql" />
+    <Build Include="Analytics\Views\v_Dim_Vendors.sql" />
+    <Build Include="Analytics\Views\v_Dim_Invoice_Properties.sql" />
+    <Build Include="Analytics\Views\v_Fact_Invoices_Sales.sql" />
+    <Build Include="Analytics\Views\v_Fact_Invoices_Returns.sql" />
+    <Build Include="Analytics\Views\v_Dim_Sales_Header_Properties.sql" />
+    <Build Include="Power_BI\Views\v_Dim_Sales_Margin.sql" />
+    <Build Include="Analytics\Views\v_Dim_Sales_Line_Properties.sql" />
+    <Build Include="Adhoc\Views\v_Inventory_Current.sql" />
+    <Build Include="Adhoc\Views\Purchase_Orders_Confirmed_Delivery_2021.sql" />
+    <Build Include="Power_BI\Views\v_Fact_Purchase_Orders.sql" />
+    <Build Include="Analytics\Views\v_Fact_Backorder_Snapshots.sql" />
+    <Build Include="Power_BI\Views\v_Purchase_Order_Line_Open_Receipt_Units2.sql" />
+    <Build Include="Analytics\Views\v_Dim_Sales_Order_Fill.sql" />
+    <Build Include="Power_BI\Views\v_Fact_Transaction_Lifecycle.sql" />
+    <Build Include="Power_BI\Views\v_Fact_Sales_Sales.sql" />
+    <Build Include="Analytics\Views\v_Fact_Open_Recieved_Units.sql" />
+    <Build Include="Power_BI\Views\v_Dim_Dates.sql" />
+    <Build Include="Power_BI\Views\v_Selling_Report_Tracking_Numbers.sql" />
+    <Build Include="Power_BI\Views\v_Dim_Customers.sql" />
+    <Build Include="Power_BI\Views\v_Selling_Report_Transactions.sql" />
+    <Build Include="Analytics\Views\v_Fact_Transaction_Lifecycle.sql" />
+    <Build Include="Power_BI\Views\v_Margin_Alert.sql" />
+    <Build Include="Security\db_executor.sql" />
+    <Build Include="Security\SVC-PRD-D365.sql" />
+    <Build Include="Security\SVC-PRD-D365_1.sql" />
+    <Build Include="Security\SVC-PRD-RPT.sql" />
+    <Build Include="Security\SVC-PRD-RPT_1.sql" />
+    <Build Include="Security\CWD_SVC-PRD-RPT.sql" />
+    <Build Include="Security\CWD_SVC-PRD-RPT_1.sql" />
+    <Build Include="Security\CWD_rgreenwood.sql" />
+    <Build Include="Security\CWD_rgreenwood_1.sql" />
+    <Build Include="Security\NT AUTHORITY_SYSTEM.sql" />
+    <Build Include="Security\NT AUTHORITY_SYSTEM_1.sql" />
+    <Build Include="Security\CWD_SVC-PRD-D365.sql" />
+    <Build Include="Security\CWD_SVC-PRD-D365_1.sql" />
+    <Build Include="Security\kwest.sql" />
+    <Build Include="Security\kwest_1.sql" />
+    <Build Include="Security\ahendrickson.sql" />
+    <Build Include="Security\ahendrickson_1.sql" />
+    <Build Include="Security\CWD_ahendrickson.sql" />
+    <Build Include="Security\CWD_ahendrickson_1.sql" />
+    <Build Include="Security\mmurphy.sql" />
+    <Build Include="Security\mmurphy_1.sql" />
+    <Build Include="Security\edelic.sql" />
+    <Build Include="Security\jbarreto.sql" />
+    <Build Include="Security\jbarreto_1.sql" />
+    <Build Include="Security\vturchyk.sql" />
+    <Build Include="Security\vturchyk_1.sql" />
+    <Build Include="Security\jmarquez.sql" />
+    <Build Include="Security\jmarquez_1.sql" />
+    <Build Include="Security\dgutnik.sql" />
+    <Build Include="Security\dgutnik_1.sql" />
+    <Build Include="Security\ccarrillo.sql" />
+    <Build Include="Security\ccarrillo_1.sql" />
+    <Build Include="Security\RoleMemberships.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Warehouse_Shipping_Orders_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Sessions_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Product_Current_Trade_Agreement_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Sales_Header_Properties_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Product_Average_Unit_Cost_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Sales_Line_Properties_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Vendors_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Shipping_Advice_Cancels_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Warehouse_Shipping_Orders_Merge_BACKUP_11042022.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Purchase_Orders_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Marketing_Ship_Confirmation_Carriers_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Sales_Sales_Line_Created_Date_EST_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Purchase_Order_Properties_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Warehouse_Shipping_Advice_Merge.sql" />
+    <Build Include="Validation\Stored Procedures\usp_Sales_Order_Header_Orphan_Transfer.sql" />
+    <Build Include="Validation\Stored Procedures\usp_Sales_Order_Line_Orphan_Transfer.sql" />
+    <Build Include="Validation\Stored Procedures\usp_Sales_Order_Header_Duplicate_Transfer.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Demand_Summary_Merge.sql" />
+    <Build Include="Validation\Stored Procedures\usp_Sales_Order_Line_Duplicate_Transfer.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Sales_Order_Attributes_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Sales_Sales_Order_Attribute_Key_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Locations_Delivery_Address_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Product_Weighted_Average_Unit_Cost_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Backorders_Insert.sql" />
+    <Build Include="Import\Stored Procedures\usp_Reference_Purchase_Order_Seasons_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Vendor_Packing_Slip_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Reference_Inventory_Statuses_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Catalogs_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Catalog_Products_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Dates_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Purchase_Orders_Purchase_Order_Fill_Key_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Product_is_Currently_Backordered_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Product_First_Catalog_Key_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Product_Hard_Mark_Soft_Mark_Timed_Event_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Product_Current_Catalog_Key_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Product_Next_Catalog_Key_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Sales_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Sales_Order_Coupon_Usage Staging_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Purchase_Orders_Purchase_Order_Fill_Key_Update_BACKUP_072921.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Product_First_Vendor_Packing_Slip_Key_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Invoice_Properties_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Sales_Merge_BACKUP_11272022.sql" />
+    <Build Include="Import\Stored Procedures\usp_Reference_Inventory_Exclusions_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Products_Denormalized_Attributes_Update.sql" />
+    <Build Include="Analytics\Stored Procedures\usp_Return_Orders_FY2021.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Product_Earliest_Open_Purchase_Order_Key_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Invoice_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Product_Earliest_Open_Sales_Key_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Product_Average_Unit_Retail_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Inventory_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Sales_Invoice_Key_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Products_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Vendor_Packing_Slip_is_Backordered_Product_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Purchase_Orders_Purchase_Order_Line_Charges_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Product_Purchase_Orders_Sales_Orders_Quantity_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Invoice_Invoice_Header_Total_Charge_Amount_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Inventory_Journal_Properties_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Employees_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Backorder_Relief_Summary_Populate.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Inventory_Warehouses_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Invoice_Invoice_Attribute_Key_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Inventory_Journal_Types_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Trade_Agreement_Costs_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Product_Earliest_Open_Purchase_Order_Key_Update_BACKUP_081921.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Sales_Sales_Margin_Key_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Trade_Agreement_Prices_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Dates_Fiscal_Date_Last_Year_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Purchase_Orders_Received_Quantity_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Catalog_Promotions_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Customers_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Sales_Sales_Order_Fill_Key_Update.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Inventory_Journal_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Dimension_Locations_Puchase Order_Delivery_Address_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Backorder_Fiscal_Week_Summary_Populate.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Forecast_Merge.sql" />
+    <Build Include="Import\Stored Procedures\usp_Fact_Credit_Card_Declines_Merge.sql" />
+    <Build Include="Security\Adhoc.sql" />
+    <Build Include="Security\Administration.sql" />
+    <Build Include="Security\Analytics.sql" />
+    <Build Include="Security\Data_Flow.sql" />
+    <Build Include="Security\Dimension.sql" />
+    <Build Include="Security\Export_Cognizant.sql" />
+    <Build Include="Security\Fact.sql" />
+    <Build Include="Security\Import.sql" />
+    <Build Include="Security\Marketing.sql" />
+    <Build Include="Security\Power_BI.sql" />
+    <Build Include="Security\PowerBI.sql" />
+    <Build Include="Security\Purchasing.sql" />
+    <Build Include="Security\Reference.sql" />
+    <Build Include="Security\Sales.sql" />
+    <Build Include="Security\Staging.sql" />
+    <Build Include="Security\Validation.sql" />
+  </ItemGroup>
+</Project>

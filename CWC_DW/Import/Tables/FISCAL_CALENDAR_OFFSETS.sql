@@ -1,0 +1,9 @@
+﻿CREATE TABLE [Import].[FISCAL_CALENDAR_OFFSETS] (
+    [Row_ID]     INT           NULL,
+    [FDATE]      NVARCHAR (10) NULL,
+    [PRIOR YEAR] NVARCHAR (10) NULL,
+    [LLY]        NVARCHAR (10) NULL,
+    [PRIOR WEEK] NVARCHAR (10) NULL,
+    [PRIOR DAY]  NVARCHAR (10) NULL
+);
+

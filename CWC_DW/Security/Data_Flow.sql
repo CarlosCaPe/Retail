@@ -1,0 +1,3 @@
+﻿CREATE SCHEMA [Data_Flow]
+    AUTHORIZATION [dbo];
+

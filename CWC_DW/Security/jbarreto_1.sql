@@ -1,0 +1,3 @@
+﻿CREATE LOGIN [jbarreto]
+    WITH PASSWORD = N'ltdjgwQaSy:Agff~wwjtLzhomsFT7_&#$!~<it`u2,}xghQo', SID = 0xE78BFA781EF644478007FB18556CB0E7, DEFAULT_LANGUAGE = [us_english], CHECK_POLICY = OFF;
+
