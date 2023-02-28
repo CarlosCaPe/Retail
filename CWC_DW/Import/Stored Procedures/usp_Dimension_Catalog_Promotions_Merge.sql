@@ -1,7 +1,11 @@
 ﻿
+
 CREATE PROC [Import].[usp_Dimension_Catalog_Promotions_Merge] AS
 
-SET NOCOUNT ON;
+SET NOCOUNT ON
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
+
+BEGIN TRY
 
 ;WITH Catalogs AS
 	(
@@ -74,4 +78,14 @@ MERGE INTO tgt USING src
 				 tgt.[is_Removed_From_Source] = 1
 				,tgt.[ETL_Modified_Date] = CAST(SYSUTCDATETIME() AS DATETIME2(5))
 				,tgt.[ETL_Modified_Count] = (ISNULL(tgt.[ETL_Modified_Count],1) + 1);
+END TRY
+
+BEGIN CATCH
+
+	DECLARE @InputParameters NVARCHAR(MAX)
+	If @@TRANCOUNT > 0 ROLLBACK TRANSACTION
+	SELECT @InputParameters = '';
+	EXEC Administration.usp_ErrorLogger_Insert @InputParameters;
+
+END CATCH
 				

@@ -23,8 +23,41 @@
 
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Order_Properties_121_120]
     ON [Dimension].[Purchase_Order_Properties]([Purchase_Order_Header_Season_CD] ASC)
     INCLUDE([Purchase_Order_Header_Season]);
 
+
+GO
+
+
+CREATE TRIGGER [Dimension].[tr_Purchase_Order_Properties_Audit] 
+ON [Dimension].[Purchase_Order_Properties] 
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    DECLARE @Operation char(1)
+    DECLARE @RecordCount int
+    IF EXISTS (SELECT * FROM inserted)
+    BEGIN
+        IF EXISTS (SELECT * FROM deleted)
+        BEGIN
+            SET @Operation = 'U'
+            SET @RecordCount = (SELECT COUNT(*) FROM inserted) -- use inserted table to count records
+        END
+        ELSE
+        BEGIN
+            SET @Operation = 'I'
+            SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for insert operations
+        END
+    END
+    ELSE
+    BEGIN
+        SET @Operation = 'D'
+        SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for delete operations
+    END
+    EXEC [Administration].[usp_AuditTable_Insert] '[Dimension].[Purchase_Order_Properties]', @Operation, @RecordCount
+END

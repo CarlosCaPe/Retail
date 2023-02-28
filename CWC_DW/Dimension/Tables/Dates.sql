@@ -66,8 +66,39 @@
 );
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_Calendar_Date]
     ON [Dimension].[Dates]([Calendar_Date] ASC)
     INCLUDE([Date_Key]);
 
+
+GO
+CREATE TRIGGER [Dimension].[tr_Dates_Audit] 
+ON [Dimension].[Dates] 
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    DECLARE @Operation char(1)
+    DECLARE @RecordCount int
+    IF EXISTS (SELECT * FROM inserted)
+    BEGIN
+        IF EXISTS (SELECT * FROM deleted)
+        BEGIN
+            SET @Operation = 'U'
+            SET @RecordCount = (SELECT COUNT(*) FROM inserted) -- use inserted table to count records
+        END
+        ELSE
+        BEGIN
+            SET @Operation = 'I'
+            SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for insert operations
+        END
+    END
+    ELSE
+    BEGIN
+        SET @Operation = 'D'
+        SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for delete operations
+    END
+    EXEC [Administration].[usp_AuditTable_Insert] '[Dimension].[Dates]', @Operation, @RecordCount
+END

@@ -57,6 +57,8 @@
 
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_SalesOrder_Attribute_Amounts]
     ON [Fact].[Sales]([Sales_Order_Attribute_Key] ASC)
@@ -115,3 +117,38 @@ CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Sales_1463_1462]
     ON [Fact].[Sales]([Sales_Line_Property_Key] ASC, [Sales_Line_Ordered_Sales_Quantity] ASC)
     INCLUDE([Sales_Order_Number], [Invent_Trans_ID], [Sales_Header_Location_Key], [Sales_Line_Product_Key], [Sales_Line_Cost_Price], [Sales_Header_Created_Date], [Sales_Line_Price], [Sales_Line_Created_Date_EST]);
 
+
+GO
+CREATE NONCLUSTERED INDEX [IX_Sales_Line_Created_Date]
+    ON [Fact].[Sales]([Sales_Line_Created_Date] ASC)
+    INCLUDE([Sales_Order_Attribute_Key], [Sales_Line_Amount], [Sales_Line_Ordered_Quantity]);
+
+
+GO
+CREATE TRIGGER [Fact].[tr_Sales_Audit] 
+ON [Fact].Sales 
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    DECLARE @Operation char(1)
+    DECLARE @RecordCount int
+    IF EXISTS (SELECT * FROM inserted)
+    BEGIN
+        IF EXISTS (SELECT * FROM deleted)
+        BEGIN
+            SET @Operation = 'U'
+            SET @RecordCount = (SELECT COUNT(*) FROM inserted) -- use inserted table to count records
+        END
+        ELSE
+        BEGIN
+            SET @Operation = 'I'
+            SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for insert operations
+        END
+    END
+    ELSE
+    BEGIN
+        SET @Operation = 'D'
+        SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for delete operations
+    END
+    EXEC [Administration].[usp_AuditTable_Insert] '[Fact].[Sales]', @Operation, @RecordCount
+END

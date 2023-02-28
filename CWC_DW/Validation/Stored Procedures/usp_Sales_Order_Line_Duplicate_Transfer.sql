@@ -1,11 +1,16 @@
 ﻿
+
 CREATE PROC [Validation].[usp_Sales_Order_Line_Duplicate_Transfer]
 
 AS
 
-BEGIN TRANSACTION
+
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+SET NOCOUNT ON;
 
 BEGIN TRY
+
+
 
 	--Archive Error Records
 	;WITH Duplicate_Orders AS
@@ -13,7 +18,7 @@ BEGIN TRY
 	SELECT SalesOrderNumber = sl.SALESORDERNUMBER
 		  ,LineNumber = sl.[LINECREATIONSEQUENCENUMBER]
 			--,RecordCount = COUNT(*) 
-	FROM  [AX_PRODUCTION].[dbo].[ITSSalesOrderLineStaging] sl (NOLOCK)
+	FROM  [AX_PRODUCTION].[dbo].[ITSSalesOrderLineStaging] sl  
 	GROUP BY sl.SALESORDERNUMBER,sl.[LINECREATIONSEQUENCENUMBER]
 	HAVING COUNT(*) > 1
 	)
@@ -31,9 +36,9 @@ BEGIN TRY
 										  ,sl.[SALESLINEMODIFIEDDATETIME] DESC
 										  ),sl.* 
 	FROM Duplicate_Orders do
-	INNER JOIN [AX_PRODUCTION].[dbo].[ITSSalesOrderLineStaging] sl (NOLOCK) ON do.SALESORDERNUMBER = sl.SALESORDERNUMBER AND do.LineNumber = sl.[LINECREATIONSEQUENCENUMBER]
+	INNER JOIN [AX_PRODUCTION].[dbo].[ITSSalesOrderLineStaging] sl   ON do.SALESORDERNUMBER = sl.SALESORDERNUMBER AND do.LineNumber = sl.[LINECREATIONSEQUENCENUMBER]
 
-	) --SELECT * FROM Duplicate_Seq WHERE seq > 1
+	) 
 
 	INSERT INTO [AX_PRODUCTION].[dbo].[ITSSalesOrderLineStaging_Errors]
 
@@ -166,8 +171,7 @@ BEGIN TRY
 	SELECT SalesOrderNumber = sl.SALESORDERNUMBER
 	,LineNumber = sl.[LINECREATIONSEQUENCENUMBER]
 	,SalesOrderLineConcat = CONCAT(sl.SALESORDERNUMBER,'-',sl.[LINECREATIONSEQUENCENUMBER])
-	--,RecordCount = COUNT(*) 
-	FROM  [AX_PRODUCTION].[dbo].[ITSSalesOrderLineStaging] sl (NOLOCK)
+	FROM  [AX_PRODUCTION].[dbo].[ITSSalesOrderLineStaging] sl  
 	GROUP BY sl.SALESORDERNUMBER,sl.[LINECREATIONSEQUENCENUMBER]
 	HAVING COUNT(*) > 1
 	)
@@ -184,28 +188,19 @@ BEGIN TRY
 										  END
 										  ,sl.[SALESLINEMODIFIEDDATETIME] DESC
 										  ),sl.* 
-	FROM [AX_PRODUCTION].[dbo].[ITSSalesOrderLineStaging] sl (NOLOCK)
+	FROM [AX_PRODUCTION].[dbo].[ITSSalesOrderLineStaging] sl  
 	WHERE CONCAT(sl.SALESORDERNUMBER,'-',sl.[LINECREATIONSEQUENCENUMBER]) IN (SELECT SalesOrderLineConcat FROM Duplicate_Orders)
-	) --SELECT * FROM Duplicate_Seq WHERE seq > 1;
+	) 
 	DELETE Duplicate_Seq WHERE seq > 1;
 
 END TRY
 
 BEGIN CATCH
 
-    SELECT   
-        ERROR_NUMBER() AS ErrorNumber  
-        ,ERROR_SEVERITY() AS ErrorSeverity  
-        ,ERROR_STATE() AS ErrorState  
-        ,ERROR_PROCEDURE() AS ErrorProcedure  
-        ,ERROR_LINE() AS ErrorLine  
-        ,ERROR_MESSAGE() AS ErrorMessage; 
+	DECLARE @InputParameters NVARCHAR(MAX)
+	If @@TRANCOUNT > 0 ROLLBACK TRANSACTION
+	SELECT @InputParameters = '';
+	EXEC Administration.usp_ErrorLogger_Insert @InputParameters;
 
-IF @@TRANCOUNT > 0  
-	ROLLBACK TRANSACTION;
-
-END CATCH
-
-IF @@TRANCOUNT > 0  
-    COMMIT TRANSACTION;  
+END CATCH  
 

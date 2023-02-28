@@ -27,6 +27,8 @@
 
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_Purchase_Order_Key]
     ON [Fact].[Vendor_Packing_Slips]([Purchase_Order_Key] ASC)
@@ -56,3 +58,34 @@ CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Vendor_Packing_Slips_145_144]
     ON [Fact].[Vendor_Packing_Slips]([Vendor_Packing_Accounting_Date] ASC)
     INCLUDE([Vendor_Packing_Slip_Quantity], [is_Backordered_Product]);
 
+
+GO
+
+
+create  TRIGGER [Fact].[tr_Vendor_Packing_Slips_Audit] 
+ON [Fact].Vendor_Packing_Slips
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    DECLARE @Operation char(1)
+    DECLARE @RecordCount int
+    IF EXISTS (SELECT * FROM inserted)
+    BEGIN
+        IF EXISTS (SELECT * FROM deleted)
+        BEGIN
+            SET @Operation = 'U'
+            SET @RecordCount = (SELECT COUNT(*) FROM inserted) -- use inserted table to count records
+        END
+        ELSE
+        BEGIN
+            SET @Operation = 'I'
+            SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for insert operations
+        END
+    END
+    ELSE
+    BEGIN
+        SET @Operation = 'D'
+        SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for delete operations
+    END
+    EXEC [Administration].[usp_AuditTable_Insert] '[Fact].[Vendor_Packing_Slips]', @Operation, @RecordCount
+END

@@ -18,3 +18,34 @@
     CONSTRAINT [UK_Pick_ID_Sales_Key] UNIQUE NONCLUSTERED ([Pick_ID] ASC, [Sales_Key] ASC, [VP_ID] ASC)
 );
 
+
+
+
+GO
+create  TRIGGER [Fact].[tr_Warehouse_Shipping_Orders_Audit] 
+ON [Fact].Warehouse_Shipping_Orders
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    DECLARE @Operation char(1)
+    DECLARE @RecordCount int
+    IF EXISTS (SELECT * FROM inserted)
+    BEGIN
+        IF EXISTS (SELECT * FROM deleted)
+        BEGIN
+            SET @Operation = 'U'
+            SET @RecordCount = (SELECT COUNT(*) FROM inserted) -- use inserted table to count records
+        END
+        ELSE
+        BEGIN
+            SET @Operation = 'I'
+            SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for insert operations
+        END
+    END
+    ELSE
+    BEGIN
+        SET @Operation = 'D'
+        SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for delete operations
+    END
+    EXEC [Administration].[usp_AuditTable_Insert] '[Fact].[Warehouse_Shipping_Orders]', @Operation, @RecordCount
+END

@@ -14,3 +14,35 @@
     CONSTRAINT [UK_Locations] UNIQUE NONCLUSTERED ([Street] ASC, [City] ASC, [State] ASC, [Zip_Code] ASC, [Country] ASC)
 );
 
+
+
+
+GO
+
+CREATE TRIGGER [Dimension].[tr_Locations_Audit] 
+ON [Dimension].[Locations] 
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    DECLARE @Operation char(1)
+    DECLARE @RecordCount int
+    IF EXISTS (SELECT * FROM inserted)
+    BEGIN
+        IF EXISTS (SELECT * FROM deleted)
+        BEGIN
+            SET @Operation = 'U'
+            SET @RecordCount = (SELECT COUNT(*) FROM inserted) -- use inserted table to count records
+        END
+        ELSE
+        BEGIN
+            SET @Operation = 'I'
+            SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for insert operations
+        END
+    END
+    ELSE
+    BEGIN
+        SET @Operation = 'D'
+        SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for delete operations
+    END
+    EXEC [Administration].[usp_AuditTable_Insert] '[Dimension].[Locations]', @Operation, @RecordCount
+END

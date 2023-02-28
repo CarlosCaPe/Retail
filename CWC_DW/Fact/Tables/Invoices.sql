@@ -35,6 +35,8 @@
 
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_Sales_Key]
     ON [Fact].[Invoices]([Sales_Key] ASC)
@@ -75,3 +77,32 @@ CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Invoices_1541_1540]
     ON [Fact].[Invoices]([Invoice_Attribute_Key] ASC, [Invoice_Line_Date] ASC)
     INCLUDE([Invoice_Number], [Invent_Trans_ID]);
 
+
+GO
+CREATE TRIGGER [Fact].[tr_Invoices_Audit] 
+ON [Fact].Invoices 
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    DECLARE @Operation char(1)
+    DECLARE @RecordCount int
+    IF EXISTS (SELECT * FROM inserted)
+    BEGIN
+        IF EXISTS (SELECT * FROM deleted)
+        BEGIN
+            SET @Operation = 'U'
+            SET @RecordCount = (SELECT COUNT(*) FROM inserted) -- use inserted table to count records
+        END
+        ELSE
+        BEGIN
+            SET @Operation = 'I'
+            SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for insert operations
+        END
+    END
+    ELSE
+    BEGIN
+        SET @Operation = 'D'
+        SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for delete operations
+    END
+    EXEC [Administration].[usp_AuditTable_Insert] '[Fact].[Invoices]', @Operation, @RecordCount
+END

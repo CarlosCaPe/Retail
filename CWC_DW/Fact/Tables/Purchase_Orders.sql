@@ -51,6 +51,8 @@
 
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Orders_217_216]
     ON [Fact].[Purchase_Orders]([Purchase_Order_Header_Accounting_Date] ASC, [Open_Quantity] ASC)
@@ -128,3 +130,32 @@ CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Orders_123_122]
     ON [Fact].[Purchase_Orders]([Purchase_Order_Fill_Key] ASC, [is_Removed_From_Source] ASC, [Purchase_Order_Header_Accounting_Date] ASC, [Purchase_Line_Confirmed_Delivery_Date] ASC)
     INCLUDE([Purchase_Order_Number], [Purchase_Order_Property_Key], [Product_Key]);
 
+
+GO
+CREATE TRIGGER [Fact].[tr_Purchase_Orders_Audit] 
+ON [Fact].Purchase_Orders 
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    DECLARE @Operation char(1)
+    DECLARE @RecordCount int
+    IF EXISTS (SELECT * FROM inserted)
+    BEGIN
+        IF EXISTS (SELECT * FROM deleted)
+        BEGIN
+            SET @Operation = 'U'
+            SET @RecordCount = (SELECT COUNT(*) FROM inserted) -- use inserted table to count records
+        END
+        ELSE
+        BEGIN
+            SET @Operation = 'I'
+            SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for insert operations
+        END
+    END
+    ELSE
+    BEGIN
+        SET @Operation = 'D'
+        SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for delete operations
+    END
+    EXEC [Administration].[usp_AuditTable_Insert] '[Fact].[Purchase_Orders]', @Operation, @RecordCount
+END

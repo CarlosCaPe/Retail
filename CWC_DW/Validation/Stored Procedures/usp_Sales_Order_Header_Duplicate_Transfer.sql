@@ -1,17 +1,20 @@
 ﻿
+
 CREATE PROC [Validation].[usp_Sales_Order_Header_Duplicate_Transfer]
 
 AS
 
-BEGIN TRANSACTION
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+SET NOCOUNT ON;
 
 BEGIN TRY
+
 
 	--Archive Error Records
 	;WITH Duplicate_Orders AS
 	(
 	SELECT s.SalesOrderNumber
-	FROM [AX_PRODUCTION].[dbo].[ITSSalesOrderHeaderEntityStaging] s (NOLOCK)
+	FROM [AX_PRODUCTION].[dbo].[ITSSalesOrderHeaderEntityStaging] s  
 	GROUP BY s.SalesOrderNumber
 	HAVING COUNT(*) > 1
 	)
@@ -29,7 +32,7 @@ BEGIN TRY
 										  ,s.[SALESTABLEMODIFIEDDATETIME] DESC
 										  ),s.* 
 	FROM Duplicate_Orders do
-	INNER JOIN [AX_PRODUCTION].[dbo].[ITSSalesOrderHeaderEntityStaging] s (NOLOCK) ON do.SALESORDERNUMBER = s.SALESORDERNUMBER
+	INNER JOIN [AX_PRODUCTION].[dbo].[ITSSalesOrderHeaderEntityStaging] s   ON do.SALESORDERNUMBER = s.SALESORDERNUMBER
 
 	) --SELECT * FROM Duplicate_Seq
 
@@ -193,7 +196,7 @@ BEGIN TRY
 	WITH Duplicate_Orders AS
 	(
 	SELECT s.SalesOrderNumber
-	FROM [AX_PRODUCTION].[dbo].[ITSSalesOrderHeaderEntityStaging] s (NOLOCK)
+	FROM [AX_PRODUCTION].[dbo].[ITSSalesOrderHeaderEntityStaging] s  
 	GROUP BY s.SalesOrderNumber
 	HAVING COUNT(*) > 1
 	)
@@ -221,18 +224,9 @@ END TRY
 
 BEGIN CATCH
 
-    SELECT   
-        ERROR_NUMBER() AS ErrorNumber  
-        ,ERROR_SEVERITY() AS ErrorSeverity  
-        ,ERROR_STATE() AS ErrorState  
-        ,ERROR_PROCEDURE() AS ErrorProcedure  
-        ,ERROR_LINE() AS ErrorLine  
-        ,ERROR_MESSAGE() AS ErrorMessage; 
+	DECLARE @InputParameters NVARCHAR(MAX)
+	If @@TRANCOUNT > 0 ROLLBACK TRANSACTION
+	SELECT @InputParameters = '';
+	EXEC Administration.usp_ErrorLogger_Insert @InputParameters;
 
-IF @@TRANCOUNT > 0  
-	ROLLBACK TRANSACTION;
-
-END CATCH
-
-IF @@TRANCOUNT > 0  
-    COMMIT TRANSACTION;  
+END CATCH  
