@@ -2,6 +2,7 @@
 
 
 
+
 CREATE VIEW [Power_BI].[v_Purchase_Order_Line_Open_Receipt_Units]
 AS
 
@@ -24,7 +25,7 @@ SELECT --TOP (1000)
 	,[Fiscal Week Index] = DENSE_RANK() OVER(ORDER BY CAST(d.[Fiscal_Year] AS VARCHAR(4)),CAST(100 + d.[Fiscal_Week_of_Year] AS VARCHAR(3)))
 	,[Receipt Date] = [Vendor_Packing_Accounting_Date]
 	,[Receipt Quantity] = [Vendor_Packing_Slip_Quantity]
-	,[Confirmed Delivery Date] = NULL
+	,[Confirmed Delivery Date] = po.[Purchase Line Confirmed Delivery Date]
 	,[Open Quantity] = NULL
 	,[Units] = [Vendor_Packing_Slip_Quantity]
 	,[Commission Charge Percentage]
