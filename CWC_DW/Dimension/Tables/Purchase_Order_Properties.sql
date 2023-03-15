@@ -25,6 +25,8 @@
 
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Order_Properties_121_120]
     ON [Dimension].[Purchase_Order_Properties]([Purchase_Order_Header_Season_CD] ASC)
@@ -32,32 +34,62 @@ CREATE NONCLUSTERED INDEX [CWC_DW_SQLOPS_Purchase_Order_Properties_121_120]
 
 
 GO
-
-
-CREATE TRIGGER [Dimension].[tr_Purchase_Order_Properties_Audit] 
-ON [Dimension].[Purchase_Order_Properties] 
-AFTER INSERT, UPDATE, DELETE
+ CREATE TRIGGER [Dimension].[tr_Purchase_Order_Properties_Audit] ON [Dimension].[Purchase_Order_Properties]
+AFTER INSERT
+	,UPDATE
+	,DELETE
 AS
 BEGIN
-    DECLARE @Operation char(1)
-    DECLARE @RecordCount int
-    IF EXISTS (SELECT * FROM inserted)
-    BEGIN
-        IF EXISTS (SELECT * FROM deleted)
-        BEGIN
-            SET @Operation = 'U'
-            SET @RecordCount = (SELECT COUNT(*) FROM inserted) -- use inserted table to count records
-        END
-        ELSE
-        BEGIN
-            SET @Operation = 'I'
-            SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for insert operations
-        END
-    END
-    ELSE
-    BEGIN
-        SET @Operation = 'D'
-        SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for delete operations
-    END
-    EXEC [Administration].[usp_AuditTable_Insert] '[Dimension].[Purchase_Order_Properties]', @Operation, @RecordCount
+	DECLARE @Operation CHAR(1)
+	DECLARE @RecordCount INT
+
+	IF EXISTS (
+			SELECT NULL
+			FROM inserted
+			)
+	BEGIN
+		IF EXISTS (
+				SELECT NULL
+				FROM deleted
+				)
+		BEGIN
+			IF EXISTS (
+					SELECT NULL
+					FROM inserted i
+					INNER JOIN deleted d ON i.Purchase_Order_Property_Key = d.Purchase_Order_Property_Key
+					WHERE i.is_removed_from_source = 1 AND (d.is_removed_from_source = 0 OR d.is_removed_from_source IS NULL)
+					)
+			BEGIN
+				SET @Operation = 'L'
+				SET @RecordCount = (
+						SELECT COUNT(*)
+						FROM inserted i
+						INNER JOIN deleted d ON i.Purchase_Order_Property_Key = d.Purchase_Order_Property_Key
+						WHERE i.is_removed_from_source = 1 AND (d.is_removed_from_source = 0 OR d.is_removed_from_source IS NULL)
+						)
+			END
+			ELSE
+			BEGIN
+				SET @Operation = 'U'
+				SET @RecordCount = (
+						SELECT COUNT(*)
+						FROM inserted
+						)
+			END
+		END
+		ELSE
+		BEGIN
+			SET @Operation = 'I'
+			SET @RecordCount = @@ROWCOUNT
+		END
+	END
+	ELSE
+	BEGIN
+		SET @Operation = 'D'
+		SET @RecordCount = @@ROWCOUNT
+	END
+
+	EXEC [Administration].[usp_Audit_Table_Insert] '[Dimension].[Purchase_Order_Properties]'
+		,@Operation
+		,@RecordCount
 END

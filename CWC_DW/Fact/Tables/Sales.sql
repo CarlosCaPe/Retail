@@ -59,6 +59,8 @@
 
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_SalesOrder_Attribute_Amounts]
     ON [Fact].[Sales]([Sales_Order_Attribute_Key] ASC)
@@ -125,30 +127,62 @@ CREATE NONCLUSTERED INDEX [IX_Sales_Line_Created_Date]
 
 
 GO
-CREATE TRIGGER [Fact].[tr_Sales_Audit] 
-ON [Fact].Sales 
-AFTER INSERT, UPDATE, DELETE
+ CREATE TRIGGER [Fact].[tr_Sales_Audit] ON [Fact].Sales
+AFTER INSERT
+	,UPDATE
+	,DELETE
 AS
 BEGIN
-    DECLARE @Operation char(1)
-    DECLARE @RecordCount int
-    IF EXISTS (SELECT * FROM inserted)
-    BEGIN
-        IF EXISTS (SELECT * FROM deleted)
-        BEGIN
-            SET @Operation = 'U'
-            SET @RecordCount = (SELECT COUNT(*) FROM inserted) -- use inserted table to count records
-        END
-        ELSE
-        BEGIN
-            SET @Operation = 'I'
-            SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for insert operations
-        END
-    END
-    ELSE
-    BEGIN
-        SET @Operation = 'D'
-        SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for delete operations
-    END
-    EXEC [Administration].[usp_AuditTable_Insert] '[Fact].[Sales]', @Operation, @RecordCount
+	DECLARE @Operation CHAR(1)
+	DECLARE @RecordCount INT
+
+	IF EXISTS (
+			SELECT NULL
+			FROM inserted
+			)
+	BEGIN
+		IF EXISTS (
+				SELECT NULL
+				FROM deleted
+				)
+		BEGIN
+			IF EXISTS (
+					SELECT NULL
+					FROM inserted i
+					INNER JOIN deleted d ON i.Sales_Key = d.Sales_Key
+					WHERE i.is_removed_from_source = 1 AND (d.is_removed_from_source = 0 OR d.is_removed_from_source IS NULL)
+					)
+			BEGIN
+				SET @Operation = 'L'
+				SET @RecordCount = (
+						SELECT COUNT(*)
+						FROM inserted i
+						INNER JOIN deleted d ON i.Sales_Key = d.Sales_Key
+						WHERE i.is_removed_from_source = 1 AND (d.is_removed_from_source = 0 OR d.is_removed_from_source IS NULL)
+						)
+			END
+			ELSE
+			BEGIN
+				SET @Operation = 'U'
+				SET @RecordCount = (
+						SELECT COUNT(*)
+						FROM inserted
+						)
+			END
+		END
+		ELSE
+		BEGIN
+			SET @Operation = 'I'
+			SET @RecordCount = @@ROWCOUNT
+		END
+	END
+	ELSE
+	BEGIN
+		SET @Operation = 'D'
+		SET @RecordCount = @@ROWCOUNT
+	END
+
+	EXEC [Administration].[usp_Audit_Table_Insert] '[Fact].[Sales]'
+		,@Operation
+		,@RecordCount
 END

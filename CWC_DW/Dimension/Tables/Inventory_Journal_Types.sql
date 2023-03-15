@@ -12,33 +12,65 @@
 
 
 
+
+
 GO
-
-
-CREATE TRIGGER [Dimension].[tr_Inventory_Journal_Types_Audit] 
-ON [Dimension].[Inventory_Journal_Types] 
-AFTER INSERT, UPDATE, DELETE
+ CREATE TRIGGER [Dimension].[tr_Inventory_Journal_Types_Audit] ON [Dimension].[Inventory_Journal_Types]
+AFTER INSERT
+	,UPDATE
+	,DELETE
 AS
 BEGIN
-    DECLARE @Operation char(1)
-    DECLARE @RecordCount int
-    IF EXISTS (SELECT * FROM inserted)
-    BEGIN
-        IF EXISTS (SELECT * FROM deleted)
-        BEGIN
-            SET @Operation = 'U'
-            SET @RecordCount = (SELECT COUNT(*) FROM inserted) -- use inserted table to count records
-        END
-        ELSE
-        BEGIN
-            SET @Operation = 'I'
-            SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for insert operations
-        END
-    END
-    ELSE
-    BEGIN
-        SET @Operation = 'D'
-        SET @RecordCount = @@ROWCOUNT -- use @@ROWCOUNT for delete operations
-    END
-    EXEC [Administration].[usp_AuditTable_Insert] '[Dimension].[Inventory_Journal_Types]', @Operation, @RecordCount
+	DECLARE @Operation CHAR(1)
+	DECLARE @RecordCount INT
+
+	IF EXISTS (
+			SELECT NULL
+			FROM inserted
+			)
+	BEGIN
+		IF EXISTS (
+				SELECT NULL
+				FROM deleted
+				)
+		BEGIN
+			IF EXISTS (
+					SELECT NULL
+					FROM inserted i
+					INNER JOIN deleted d ON i.Inventory_Journal_Type_Key = d.Inventory_Journal_Type_Key
+					WHERE i.is_removed_from_source = 1 AND (d.is_removed_from_source = 0 OR d.is_removed_from_source IS NULL)
+					)
+			BEGIN
+				SET @Operation = 'L'
+				SET @RecordCount = (
+						SELECT COUNT(*)
+						FROM inserted i
+						INNER JOIN deleted d ON i.Inventory_Journal_Type_Key = d.Inventory_Journal_Type_Key
+						WHERE i.is_removed_from_source = 1 AND (d.is_removed_from_source = 0 OR d.is_removed_from_source IS NULL)
+						)
+			END
+			ELSE
+			BEGIN
+				SET @Operation = 'U'
+				SET @RecordCount = (
+						SELECT COUNT(*)
+						FROM inserted
+						)
+			END
+		END
+		ELSE
+		BEGIN
+			SET @Operation = 'I'
+			SET @RecordCount = @@ROWCOUNT
+		END
+	END
+	ELSE
+	BEGIN
+		SET @Operation = 'D'
+		SET @RecordCount = @@ROWCOUNT
+	END
+
+	EXEC [Administration].[usp_Audit_Table_Insert] '[Dimension].[Inventory_Journal_Types]'
+		,@Operation
+		,@RecordCount
 END

@@ -7,6 +7,13 @@ SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED
 
 BEGIN TRY
 
+	DECLARE  @procedureUpdateKey_ AS INT = 0
+			,@USER AS VARCHAR(20) = current_user
+			,@date AS  SMALLDATETIME = getdate()
+			,@stored_procedure_name VARCHAR(50) = OBJECT_NAME(@@PROCID);
+
+	EXEC Administration.ProcedureUpdateSet  @procedureName = @stored_procedure_name, @procedureUpdateKey = @procedureUpdateKey_ OUTPUT
+
 	WITH src AS
 		(
 			   SELECT
@@ -40,13 +47,19 @@ BEGIN TRY
 				tgt.[is_Active] = 0
 		
 			;
+UPDATE Administration.ProcedureUpdates SET [Status] = 'SUCCESS',AffectedRows =@@ROWCOUNT,EndDate = getdate()  WHERE ProcedureUpdateKey = @procedureUpdateKey_
 END TRY
 
+
 BEGIN CATCH
+
+	IF @procedureUpdateKey_ <> 0
+		UPDATE [Administration].ProcedureUpdates SET [Status] = 'FAILED', Error = ERROR_MESSAGE(),EndDate = getdate() WHERE ProcedureUpdateKey = @procedureUpdateKey_
 
 	DECLARE @InputParameters NVARCHAR(MAX)
 	If @@TRANCOUNT > 0 ROLLBACK TRANSACTION
 	SELECT @InputParameters = '';
 	EXEC Administration.usp_ErrorLogger_Insert @InputParameters;
+
 
 END CATCH
